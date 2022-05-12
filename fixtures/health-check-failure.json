@@ -1,0 +1,15 @@
+{
+  "name": "example_check",
+  "text": "\nHealth Check Name: test_health_check\nHealth Check ID: 6b8107f6f348c849347af551329e2eac\nTime : 2022-05-04 12:49:20 +0000 UTC\nStatus: Unhealthy\nFailure reason: Response code mismatch error \nExpected codes: [200]\nReceived code: 403\n",
+  "data": {
+    "time": "2022-05-04 12:49:20 +0000 UTC",
+    "status": "Unhealthy",
+    "reason": "Response code mismatch error",
+    "name": "test_health_check",
+    "preview": false,
+    "expected_codes": "[200]",
+    "actual_code": 403,
+    "health_check_id": "6b8107f6f348c849347af551329e2eac"
+  },
+  "ts": 1651668563
+}
