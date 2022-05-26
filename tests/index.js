@@ -30,7 +30,7 @@ test("healthy", async (suite) => {
 		assert.equal(
 			options.body,
 			JSON.stringify({
-				entity_display_name: "test_health_check",
+				entity_display_name: "Cloudflare Health Check test_health_check",
 				entity_id: "6b8107f6f348c849347af551329e2eac",
 				message_type: "RECOVERY",
 				state_message: [
@@ -61,7 +61,7 @@ test("healthy", async (suite) => {
 		assert.equal(
 			options.body,
 			JSON.stringify({
-				entity_display_name: "test_health_check",
+				entity_display_name: "Cloudflare Health Check test_health_check",
 				entity_id: "6b8107f6f348c849347af551329e2eac",
 				message_type: "CRITICAL",
 				state_message: [
