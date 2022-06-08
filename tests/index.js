@@ -18,10 +18,9 @@ test("healthy", async (suite) => {
 		const routingKey = "devops";
 		const request = new Request(`https://apiendpoint.net/${routingKey}`, {
 			method: "POST",
-			// headers: new Headers([ ["cf-webhook-auth", SECRET] ]),
-			headers: { "cf-webhook-auth": SECRET },
 			body: store.get("health-check-okay"),
 		});
+		request.headers.set("cf-webhook-auth", SECRET);
 		const result = await worker.fetch(request, null, context);
 		await context.get("waitUntil");
 		const [url, options] = store.get("fetch");
@@ -50,9 +49,9 @@ test("healthy", async (suite) => {
 		const routingKey = "devops";
 		const request = new Request(`https://apiendpoint.net/${routingKey}`, {
 			method: "POST",
-			headers: { "cf-webhook-auth": SECRET },
 			body: store.get("health-check-failure"),
 		});
+		request.headers.set("cf-webhook-auth", SECRET);
 		const result = await worker.fetch(request, null, context);
 		await context.get("waitUntil");
 		const [url, options] = store.get("fetch");
@@ -97,9 +96,9 @@ test("healthy", async (suite) => {
 		const routingKey = "devops";
 		const request = new Request(`https://apiendpoint.net/`, {
 			method: "POST",
-			headers: { "cf-webhook-auth": SECRET },
 			body: store.get("health-check-failure"),
 		});
+		request.headers.set("cf-webhook-auth", SECRET);
 		const result = await worker.fetch(request, null, context);
 		assert.equal(store.get("fetch"), undefined);
 		assert.equal(context.get("waitUntil"), undefined);
