@@ -1,47 +1,21 @@
-defaults: &defaults
-  working_directory: ~/app
-  docker:
-    - image: cimg/node:current
-      auth:
-        username: $DOCKER_USER
-        password: $DOCKER_PASS
+# This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
 version: 2.1
-jobs:
-  test:
-    <<: *defaults
-    steps:
-      - checkout
-      - run: npm i
-      - persist_to_workspace:
-          root: .
-          paths:
-            - node_modules
-      - run: npm t
-      - run: npm run lint
-  publish:
-    <<: *defaults
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Setup Environment Variables
-          command: |
-            echo 'export CLOUDFLARE_ACCOUNT_ID=$CF_ACCOUT_ID' >> $BASH_ENV
-            echo 'export CLOUDFLARE_API_TOKEN=$CF_WORKERS_API_TOKEN' >> $BASH_ENV
-      - run:
-          name: Publish the worker code
-          command: npm run publish
+
+# Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
+# See: https://circleci.com/docs/2.0/orb-intro/
+orbs:
+  node: circleci/node@4.7
+
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  publish:
+  sample: # This is the name of the workflow, feel free to change it to better match your workflow.
+    # Inside the workflow, you define the jobs you want to run.
     jobs:
-      - test:
-          context: org-global
-      - publish:
-          context: org-global
-          requires:
-            - test
-          filters:
-            branches:
-              only:
-                - master
+      - node/test:
+          # This is the node version to use for the `cimg/node` tag
+          # Relevant tags can be found on the CircleCI Developer Hub
+          # https://circleci.com/developer/images/image/cimg/node
+          version: '16.10'
+          # If you are using yarn, change the line below from "npm" to "yarn"
+          pkg-manager: npm
