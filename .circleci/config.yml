@@ -17,8 +17,8 @@ jobs:
           paths:
             - node_modules
       - run: npm t
-      - run: npm run lint
-  publish:
+      - run: npx prettier -c .
+  deploy:
     <<: *defaults
     steps:
       - checkout
@@ -30,14 +30,14 @@ jobs:
             echo 'export CLOUDFLARE_ACCOUNT_ID=$CF_ACCOUT_ID' >> $BASH_ENV
             echo 'export CLOUDFLARE_API_TOKEN=$CF_WORKERS_API_TOKEN' >> $BASH_ENV
       - run:
-          name: Publish the worker code
-          command: npm run publish
+          name: Deploy the worker code
+          command: npm run deploy
 workflows:
-  publish:
+  deploy:
     jobs:
       - test:
           context: org-global
-      - publish:
+      - deploy:
           context: org-global
           requires:
             - test

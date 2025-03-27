@@ -1,13 +1,12 @@
-import { Request } from "@cloudflare/workers-types";
-import { IncomingPayload } from "../types";
-import { REST_ENDPOINT } from "../constants";
-import { transformMessage } from "../transformMessage";
-import { post } from "../post";
+import type { IncomingPayload } from "../types.d.ts";
+import { REST_ENDPOINT } from "../constants/index.ts";
+import { transformMessage } from "../transformMessage/index.ts";
+import { post } from "../post/index.ts";
 
 export async function forward(
 	request: Request,
 	routingKey: string,
-	secret: string
+	secret: string,
 ): Promise<Response> {
 	const payload: IncomingPayload = await request.json();
 	const body = transformMessage(payload);

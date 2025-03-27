@@ -1,4 +1,4 @@
-import { MessageType, StatusName } from "../types";
+import type { MessageType, StatusName } from "../types.d.ts";
 
 const HealthyStatusName: StatusName = "Healthy";
 const UnhealthyStatusName: StatusName = "Unhealthy";

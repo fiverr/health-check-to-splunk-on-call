@@ -1,4 +1,4 @@
-import { OutgoingPayload } from "../types";
+import type { OutgoingPayload } from "../types.d.ts";
 
 export const post = (url: string, data: OutgoingPayload): Promise<Response> =>
 	fetch(url, {

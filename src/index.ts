@@ -1,15 +1,14 @@
-import { Env, EventContext, Request } from "@cloudflare/workers-types";
-import { handle } from "./handle";
+import { handle } from "./handle/index.ts";
 
-export default {
-	async fetch(
-		request: Request,
-		env: Env,
-		ctx: EventContext
-	): Promise<Response> {
+type Env = Record<string, string>;
+
+const handler: ExportedHandler<Env> = {
+	async fetch(request, env, ctx) {
 		const [response, ...promises] = handle(request);
 
 		promises.forEach((promise) => ctx.waitUntil(promise));
 		return response;
 	},
 };
+
+export default handler;

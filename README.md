@@ -1,4 +1,4 @@
-# Cloudflare Health Check → Splunk On-Call [![](https://circleci.com/gh/fiverr/health-check-to-splunk-on-call/tree/master.svg?style=svg)](https://circleci.com/gh/fiverr/health-check-to-splunk-on-call/tree/master)
+# Cloudflare Health Check → Splunk On-Call
 
 ☁️ Cloudflare Edge Worker to relay Health Check messages to Splunk On-Call (FKA Victorops)
 

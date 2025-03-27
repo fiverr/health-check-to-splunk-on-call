@@ -1,5 +1,5 @@
-import { statusDictionary } from "../statusDictionary";
-import { IncomingPayload, OutgoingPayload } from "../types";
+import { statusDictionary } from "../statusDictionary/index.ts";
+import type { IncomingPayload, OutgoingPayload } from "../types.d.ts";
 
 export const transformMessage = ({
 	text,

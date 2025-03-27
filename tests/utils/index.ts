@@ -28,7 +28,7 @@ export async function setup() {
 		["health-check-failure", "health-check-okay"].map(async (name) => {
 			const file = await promises.readFile(`./tests/fixtures/${name}.json`);
 			store.set(name, file.toString());
-		})
+		}),
 	);
 }
 

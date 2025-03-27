@@ -1,8 +1,9 @@
-import { SECRET_HEADER } from "../constants";
+import { SECRET_HEADER } from "../constants/index.ts";
 
 export function getRoutingDetails(request: Request): [string, string] {
-	const url = new URL(request.url);
 	const secret = request.headers.get(SECRET_HEADER);
-	const routingKey = url.pathname.split("/").filter(Boolean).pop();
+	const routingKey = new URLPattern({ pathname: "/:routingKey" }).exec(
+		request.url,
+	)?.pathname?.groups?.routingKey;
 	return [secret, routingKey];
 }

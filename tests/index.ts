@@ -1,10 +1,14 @@
 import test from "node:test";
 import { strict as assert } from "node:assert";
-import { setup, teardown, store, Context } from "./utils/index.js";
-import { REST_ENDPOINT } from "../src/constants/index.js";
-import worker from "../index.js";
+import { URLPattern } from "node:url";
+import { setup, teardown, store, Context } from "./utils/index.ts";
+import { REST_ENDPOINT } from "../src/constants/index.ts";
+import worker from "../src/index.ts";
 
 export const SECRET = "2A756502-81B1-4CCC-A662-E9DFBC77C876";
+
+// supplement global URLPattern
+Object.assign(globalThis, { URLPattern });
 
 test("healthy", async (suite) => {
 	async function test(description, callback) {
@@ -39,7 +43,7 @@ test("healthy", async (suite) => {
 					"Status: Healthy",
 				].join("\n"),
 				state_start_time: 1651837292,
-			})
+			}),
 		);
 		assert.equal(result.status, 202);
 	});
@@ -73,7 +77,7 @@ test("healthy", async (suite) => {
 					"Received code: 403",
 				].join("\n"),
 				state_start_time: 1651668563,
-			})
+			}),
 		);
 		assert.equal(result.status, 202);
 	});

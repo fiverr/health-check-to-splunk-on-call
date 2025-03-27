@@ -1,6 +1,6 @@
-import { getRoutingDetails } from "../getRoutingDetails";
-import { forward } from "../forward";
-import { createResponse } from "../createResponse";
+import { getRoutingDetails } from "../getRoutingDetails/index.ts";
+import { forward } from "../forward/index.ts";
+import { createResponse } from "../createResponse/index.ts";
 
 export function handle(request: Request): [Response, Promise<any>?] {
 	if (request.method?.toUpperCase() !== "POST") {
