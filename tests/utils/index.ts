@@ -1,10 +1,9 @@
-import { promises } from "fs";
+import { promises } from "node:fs";
 
 /**
  * Mocked function to be restored after the tests.
- * @type {<Map<string, function>}
  */
-const originals = new Map();
+let fetch: typeof globalThis.fetch;
 
 /**
  * Store JSON fixtures for tested procedures
@@ -19,11 +18,10 @@ export const store = new Map();
  * @returns {Promise<void>}
  */
 export async function setup() {
-	originals.set("fetch", global.fetch);
-	originals.fetch = global.fetch;
-	global.fetch = function (...args) {
+	fetch = globalThis.fetch;
+	globalThis.fetch = function (...args) {
 		store.set("fetch", args);
-	};
+	} as typeof globalThis.fetch;
 	await Promise.all(
 		["health-check-failure", "health-check-okay"].map(async (name) => {
 			const file = await promises.readFile(`./tests/fixtures/${name}.json`);
@@ -39,8 +37,11 @@ export async function setup() {
  * @returns {Promise<void>}
  */
 export async function teardown() {
-	global.fetch = originals.get("fetch");
+	globalThis.fetch = fetch;
 	store.clear();
+	store.keys().forEach((key) => {
+		store.delete(key);
+	});
 }
 
 /**
@@ -48,12 +49,14 @@ export async function teardown() {
  * @property {function} waitUntil
  * @property {function} get
  */
-export class Context {
+export class Context implements ExecutionContext {
 	#store = new Map();
+	props = {};
 	waitUntil(promise) {
 		this.#store.set("waitUntil", promise);
 	}
 	get(key) {
 		return this.#store.get(key);
 	}
+	passThroughOnException() {}
 }

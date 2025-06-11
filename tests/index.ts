@@ -1,4 +1,4 @@
-import test from "node:test";
+import { afterEach, beforeEach, describe, test } from "node:test";
 import { strict as assert } from "node:assert";
 import { URLPattern } from "node:url";
 import { setup, teardown, store, Context } from "./utils/index.ts";
@@ -10,20 +10,17 @@ export const SECRET = "2A756502-81B1-4CCC-A662-E9DFBC77C876";
 // supplement global URLPattern
 Object.assign(globalThis, { URLPattern });
 
-test("healthy", async (suite) => {
-	async function test(description, callback) {
-		await setup();
-		await suite.test(description, callback);
-		await teardown();
-	}
+describe("Health Check Worker", () => {
+	beforeEach(setup);
+	afterEach(teardown);
 
-	await test("healthy check resolves the incident", async (t) => {
+	test("healthy check resolves the incident", async (t) => {
 		const context = new Context();
 		const routingKey = "devops";
 		const request = new Request(`https://apiendpoint.net/${routingKey}`, {
 			method: "POST",
 			body: store.get("health-check-okay"),
-		});
+		}) as Request<unknown, IncomingRequestCfProperties<unknown>>;
 		request.headers.set("cf-webhook-auth", SECRET);
 		const result = await worker.fetch(request, null, context);
 		await context.get("waitUntil");
@@ -48,13 +45,13 @@ test("healthy", async (suite) => {
 		assert.equal(result.status, 202);
 	});
 
-	await test("unhealthy check creates an incident", async (t) => {
+	test("unhealthy check creates an incident", async (t) => {
 		const context = new Context();
 		const routingKey = "devops";
 		const request = new Request(`https://apiendpoint.net/${routingKey}`, {
 			method: "POST",
 			body: store.get("health-check-failure"),
-		});
+		}) as Request<unknown, IncomingRequestCfProperties<unknown>>;
 		request.headers.set("cf-webhook-auth", SECRET);
 		const result = await worker.fetch(request, null, context);
 		await context.get("waitUntil");
@@ -82,26 +79,26 @@ test("healthy", async (suite) => {
 		assert.equal(result.status, 202);
 	});
 
-	await test("missing secret aborts the process", async (t) => {
+	test("missing secret aborts the process", async (t) => {
 		const context = new Context();
 		const routingKey = "devops";
 		const request = new Request(`https://apiendpoint.net/${routingKey}`, {
 			method: "POST",
 			body: store.get("health-check-failure"),
-		});
+		}) as Request<unknown, IncomingRequestCfProperties<unknown>>;
 		const result = await worker.fetch(request, null, context);
 		assert.equal(store.get("fetch"), undefined);
 		assert.equal(context.get("waitUntil"), undefined);
 		assert.equal(result.status, 401);
 	});
 
-	await test("missing routing key aborts the request", async (t) => {
+	test("missing routing key aborts the request", async (t) => {
 		const context = new Context();
 		const routingKey = "devops";
 		const request = new Request(`https://apiendpoint.net/`, {
 			method: "POST",
 			body: store.get("health-check-failure"),
-		});
+		}) as Request<unknown, IncomingRequestCfProperties<unknown>>;
 		request.headers.set("cf-webhook-auth", SECRET);
 		const result = await worker.fetch(request, null, context);
 		assert.equal(store.get("fetch"), undefined);
